@@ -9,6 +9,7 @@ Before running the application, ensure that you have the following libraries ins
 - MediaPipe
 - NumPy
 - WolframAlpha API
+  - Make sure you have an API key
 
 You can install them using pip:
 ```bash
