@@ -9,7 +9,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense
 import matplotlib.pyplot as plt
 
-data_dir = r"C:\Users\kevin\Desktop\codejam\dataset"
+data_dir = r"C:\Users\Kevin\Desktop\dataset"
 
 def load_images(directory):
     images = []

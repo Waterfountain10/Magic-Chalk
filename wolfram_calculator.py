@@ -10,5 +10,4 @@ def compute_latex_expression(latex_str, app_id):
     except Exception as e:
         return str(e)
 
-latex_expression = r'placeholder'
-app_id = 'QY6LX3-5UPVEGR9Y9'  # Kevin Liu's api key
+

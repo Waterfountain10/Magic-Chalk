@@ -264,11 +264,11 @@ def cs_sidebar():
 
 def info_pics():
 	""" Images for the instructions """
-	st.image('Instructions_pics/draw.png')
-	st.image('Instructions_pics/erase.png')
-	st.image('Instructions_pics/clear.png')
-	st.image('Instructions_pics/solution.png')
-	st.image('Instructions_pics/bookmark.png')
+	st.image('instructions_pic/draw.png')
+	st.image('instructions_pic/erase.png')
+	st.image('instructions_pic/clear.png')
+	st.image('instructions_pic/solution.png')
+	st.image('instructions_pic/bookmark.png')
 
 
 def info_captions():
