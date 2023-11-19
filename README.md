@@ -19,14 +19,14 @@ pip install streamlit opencv-python mediapipe numpy wolframalpha
 You can download this [dataset](https://www.kaggle.com/datasets/sagyamthapa/handwritten-math-symbols/code) to train your model
 - There is already a model that you can use to train, however you might need to install other dependencies
 
-#### N.B
+#### N.B.
 - Only keep 0-9, + - ÷ x
 - Delete .directory in the main folder and in folder 9
 
 ## Start & Usage
 To start the application, run the following command in your terminal:
 ```bash
-streamlit run your_script_name.py
+streamlit run main.py
 ```
 ### Available Tools
 ![tools](tools.png) <br>
