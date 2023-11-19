@@ -1,6 +1,5 @@
 # Magic Chalk - Interactive Whiteboard Application
 
-## Description
 Magic Chalk is an interactive whiteboard application developed using Python. It employs technologies like Streamlit for the web interface, OpenCV for image processing, and MediaPipe for hand gesture recognition. This application allows users to draw, erase, solve mathematical equations, and save their work with hand gestures.
 
 ## Installation & Dependencies
@@ -10,21 +9,27 @@ Before running the application, ensure that you have the following libraries ins
 - MediaPipe
 - NumPy
 - WolframAlpha API
-- Tensorflow
-- Scikitlearn
 
 You can install them using pip:
 ```bash
-pip install streamlit opencv-python mediapipe numpy wolframalpha tensorflow scikitlearn
+pip install streamlit opencv-python mediapipe numpy wolframalpha
 ```
 
-## Usage
+## Train Model
+You can download this [dataset](https://www.kaggle.com/datasets/sagyamthapa/handwritten-math-symbols/code) to train your model
+- There is already a model that you can use to train, however you might need to install other dependencies
+
+#### N.B
+- Only keep 0-9, + - ÷ x
+- Delete .directory in the main folder and in folder 9
+
+## Start & Usage
 To start the application, run the following command in your terminal:
 ```bash
 streamlit run your_script_name.py
 ```
 ### Available Tools
-![alt text](tools.png) <br>
+![tools](tools.png) <br>
 Draw - Erase - Clear - Solve - Bookmark
 
 ### How to draw
