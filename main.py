@@ -84,26 +84,28 @@ def open_camera(camera_view_placeholder):
 				if int(i) > 9:
 					contains_operator = True
 
-			try: #Avoid error message
-				if contains_operator:
-					operator = max(list_numbers)
-					index = list_numbers.index(operator) #index of operator
-					if index == 1:
-						for key in list_numbers:
-							output += int_to_str[str(key)]
-					else:
-						list_numbers[index], list_numbers[1] = list_numbers[1], list_numbers[index]
-						for key in list_numbers:
-							output += int_to_str[str(key)]
-
-				return output
+			if contains_operator:
+				operator = max(list_numbers)
+				index = list_numbers.index(operator) #index of operator
+				if index == 1:
+					for key in list_numbers:
+						output += int_to_str[str(key)]
+				else:
+					list_numbers[index], list_numbers[1] = list_numbers[1], list_numbers[index]
+					for key in list_numbers:
+						output += int_to_str[str(key)]
 			
-			except Exception:
-				return output
+			if not contains_operator:
+				for key in list_numbers:
+					output += int_to_str[str(key)]
+			return output
 
 		else:  # 1 or 2 characters only
 			for key in list_numbers:
 				output += int_to_str[str(key)]
+			return output
+	
+	
 
 	hands = mp.solutions.hands
 	hand_landmark = hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5, max_num_hands=1)
@@ -154,7 +156,7 @@ def open_camera(camera_view_placeholder):
 					rad = 30
 
 				if curr_tool == "draw":
-					xi, yi = int(i.landmark[12].x * 640), int(i.landmark[12].y * 480)
+					yi = int(i.landmark[12].y * 480)
 					y9  = int(i.landmark[9].y * 480)
 
 					if middle_finger_raised(yi, y9):
@@ -166,7 +168,7 @@ def open_camera(camera_view_placeholder):
 						prevy = y
 
 				elif curr_tool == "erase":
-					xi, yi = int(i.landmark[12].x*640), int(i.landmark[12].y*480)
+					yi = int(i.landmark[12].y*480)
 					y9  = int(i.landmark[9].y*480)
 
 					if middle_finger_raised(yi, y9):
@@ -181,7 +183,7 @@ def open_camera(camera_view_placeholder):
 
 					answer = compute_latex_expression(output, 'QY6LX3-5UPVEGR9Y9')
 
-					st.sidebar.latex(f"{output} \quad {answer}")
+					st.sidebar.latex(f"{output} \quad ={answer}")
 					curr_tool = 'solved'
 
 				elif curr_tool == 'save':
