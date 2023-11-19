@@ -13,13 +13,12 @@ st.set_page_config(
 )
 
 
-# frame_placeholder = st.empty()
+
 camera_view_placeholder = st.empty()
 
 
 def open_camera(camera_view_placeholder):
 
-	#contants
 	margin_left = 150
 	max_x, max_y = 250 + margin_left, 50
 	curr_tool = "select tool"
@@ -28,15 +27,14 @@ def open_camera(camera_view_placeholder):
 	thick = 8
 	prevx, prevy = 0,0
 
-	def save_mask_as_image(mask, file_format='jpeg'):
+	# screenshot the mask
+	def save_mask_as_image(mask, file_format='jpeg'): 
 		filename = f'mask_capture.{file_format}'
-		if file_format == 'png':
-			cv2.imwrite(filename, mask)
-		else:
-			cv2.imwrite(filename, mask, [int(cv2.IMWRITE_JPEG_QUALITY), 80])
+		cv2.imwrite(filename, mask, [int(cv2.IMWRITE_JPEG_QUALITY), 80])
 		
-	#get tools function
 	def get_tool(x):
+
+		# determine tool to use
 		if x < 50 + margin_left:
 			return "draw"
 
@@ -53,10 +51,13 @@ def open_camera(camera_view_placeholder):
 			return "save"
 
 	#y corresponds to the landmarks of the middle finger's landmark
-	def middle_finger_raised(yi, y9):
-		return (y9 - yi) > 40
+	def middle_finger_raised(y12, y9):
+		return (y9 - y12) > 40
+
 
 	def display_numbers(list_numbers):
+
+		#list number is stored as a list of int, but above 9 it should be operators
 		int_to_str = {
 			'0': '0',
 			'1': '1',
@@ -73,8 +74,9 @@ def open_camera(camera_view_placeholder):
 			'12': "=",
 			'13': '*',
 			'14': '-'
-			
 			}
+		
+		#word on screen
 		output = ""
 
 		if len(list_numbers) > 2:
@@ -85,44 +87,51 @@ def open_camera(camera_view_placeholder):
 					contains_operator = True
 
 			if contains_operator:
+
 				operator = max(list_numbers)
-				index = list_numbers.index(operator) #index of operator
+				index = list_numbers.index(operator) # index of operator
+
 				if index == 1:
 					for key in list_numbers:
 						output += int_to_str[str(key)]
+						
 				else:
 					list_numbers[index], list_numbers[1] = list_numbers[1], list_numbers[index]
 					for key in list_numbers:
 						output += int_to_str[str(key)]
 			
 			if not contains_operator:
+
 				for key in list_numbers:
 					output += int_to_str[str(key)]
+
 			return output
 
 		else:  # 1 or 2 characters only
+
 			for key in list_numbers:
 				output += int_to_str[str(key)]
+
 			return output
 	
 	
-
+	#from mediapipe
 	hands = mp.solutions.hands
 	hand_landmark = hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5, max_num_hands=1)
 	draw = mp.solutions.drawing_utils
 
 	tools = cv2.imread("tools.png")
-	tools = tools.astype('uint8')
+	tools = tools.astype('uint8') 
 
-	mask = np.ones((480, 640))*255
+	mask = np.ones((480, 640))*255 # Create a mask of black ones that is scaled to camera
 	mask = mask.astype('uint8')
 
 	cap = cv2.VideoCapture(0)
 	while True:
 		_, frm = cap.read()
-		frm = cv2.flip(frm, 1)
+		frm = cv2.flip(frm, 1) 
 
-		rgb = cv2.cvtColor(frm, cv2.COLOR_BGR2RGB)
+		rgb = cv2.cvtColor(frm, cv2.COLOR_BGR2RGB) # default is BGR
 
 		op = hand_landmark.process(rgb)
 
@@ -132,17 +141,21 @@ def open_camera(camera_view_placeholder):
 
 
 		if op.multi_hand_landmarks:
-			for i in op.multi_hand_landmarks:
-				draw.draw_landmarks(frm, i, hands.HAND_CONNECTIONS)
-				x, y = int(i.landmark[8].x*640), int(i.landmark[8].y*480)
 
-				if x < max_x and y < max_y and x > margin_left:
+			for i in op.multi_hand_landmarks:
+
+				draw.draw_landmarks(frm, i, hands.HAND_CONNECTIONS)
+				x, y = int(i.landmark[8].x*640), int(i.landmark[8].y*480) # Index and Middle fingers
+
+				if x < max_x and y < max_y and x > margin_left: # Check if Index is within tool box
+
 					if start_time:
 						ctime = time.time()
 						start_time = False
+
 					ptime = time.time()
 
-					cv2.circle(frm, (x, y), rad, (0 , 255, 0), 2)
+					cv2.circle(frm, (x, y), rad, (0 , 255, 0), 2) # Selecting design
 					rad -= 1
 
 					if (ptime - ctime) > 0.8:
@@ -156,10 +169,10 @@ def open_camera(camera_view_placeholder):
 					rad = 30
 
 				if curr_tool == "draw":
-					yi = int(i.landmark[12].y * 480)
+					y12 = int(i.landmark[12].y * 480)
 					y9  = int(i.landmark[9].y * 480)
 
-					if middle_finger_raised(yi, y9):
+					if middle_finger_raised(y12, y9):
 						cv2.line(mask, (prevx, prevy), (x, y), 0, thick)
 						prevx, prevy = x, y
 
@@ -168,10 +181,10 @@ def open_camera(camera_view_placeholder):
 						prevy = y
 
 				elif curr_tool == "erase":
-					yi = int(i.landmark[12].y*480)
+					y12 = int(i.landmark[12].y*480)
 					y9  = int(i.landmark[9].y*480)
 
-					if middle_finger_raised(yi, y9):
+					if middle_finger_raised(y12, y9):
 						cv2.circle(frm, (x, y), 30, (0,0,0), -1)
 						cv2.circle(mask, (x, y), 30, 255, -1)
 				
@@ -195,8 +208,6 @@ def open_camera(camera_view_placeholder):
 					st.sidebar.latex(output) 
 					
 					curr_tool = 'saved'
-
-					
 				
 				elif curr_tool == 'clear':
 					mask.fill(255)
@@ -204,17 +215,18 @@ def open_camera(camera_view_placeholder):
 
 		
 		op = cv2.bitwise_and(frm, frm, mask=mask)
-		frm[:, :, 2] = op[:, :, 2]
+		# only the pixels that correspond to non-zero values in the mask are retained from the original frm a.k.a colors
+
+		frm[:, :, 2] = op[:, :, 2] # red and green channel of frame to op
 		frm[:, :, 1] = op[:, :, 1]
 
 		frm = cv2.cvtColor(frm, cv2.COLOR_BGR2RGB)
 
-		frm[:max_y, margin_left:max_x] = cv2.addWeighted(tools, 0.7, frm[:max_y, margin_left:max_x], 0.3, 0)
+		frm[:max_y, margin_left:max_x] = cv2.addWeighted(tools, 0.7, frm[:max_y, margin_left:max_x], 0.3, 0) # put tool box
 
 		cv2.putText(frm, curr_tool, (270 + margin_left, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (35, 28, 221), 1)
 		
-		# frame_placeholder.image(frm)
-		camera_view_placeholder.image(frm) # TEST
+		camera_view_placeholder.image(frm)
 
 		if cv2.waitKey(1) == 27:
 			cv2.destroyAllWindows()
@@ -226,6 +238,7 @@ def open_camera(camera_view_placeholder):
 ##############
 
 def main():
+	""" Create three column spaces for the following sections: sidebar, main camera, and the instructions"""
 	col1, col2, col3 = st.columns([1, 5, 2])
 	with col1:
 		cs_sidebar()
@@ -243,12 +256,14 @@ def main():
 	
 
 def cs_sidebar():
+		""" Sidebar items """
 		st.sidebar.markdown('<div style="font-size:50px;">Magic Chalk</div>', unsafe_allow_html=True)
 		st.sidebar.code('Transcript')
 
 		return None
 
 def info_pics():
+	""" Images for the instructions """
 	st.image('Instructions_pics/draw.png')
 	st.image('Instructions_pics/erase.png')
 	st.image('Instructions_pics/clear.png')
@@ -257,6 +272,7 @@ def info_pics():
 
 
 def info_captions():
+	""" Written instructions"""
 	st.subheader('Draw Tool')
 	st.subheader("")
 	st.subheader('Erase Tool')
@@ -269,16 +285,16 @@ def info_captions():
 
 
 def cs_body():
-
+	""" Camera space and buttons """
 	#col1, col2 = st.columns([2,1])
 
-	camera_view_placeholder = st.empty() # TEST
+	camera_view_placeholder = st.empty()  # Empty space for camera
 	open_camera_button = st.button("Open camera", type="primary")
 	stop_button_pressed = st.button("Stop")
 
 	if open_camera_button:
 		# OPEN THE CAMERA
-		open_camera(camera_view_placeholder)  # TEST
+		open_camera(camera_view_placeholder)  
 
 	st.markdown("Made by William Kiem Lafond, Kevin Liu, Orlando Qiu, and David Zhou")
 
