@@ -194,7 +194,7 @@ def open_camera(camera_view_placeholder):
 					list_numbers = segment_and_predict()
 					output = display_numbers(list_numbers)
 
-					answer = compute_latex_expression(output, 'QY6LX3-5UPVEGR9Y9')
+					answer = compute_latex_expression(output, 'placeholder')
 
 					st.sidebar.latex(f"{output} \quad ={answer}")
 					curr_tool = 'solved'
