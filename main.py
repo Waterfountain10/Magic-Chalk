@@ -194,7 +194,7 @@ def open_camera(camera_view_placeholder):
 					list_numbers = segment_and_predict()
 					output = display_numbers(list_numbers)
 
-					answer = compute_latex_expression(output, 'placeholder')
+					answer = compute_latex_expression(output, 'QY6LX3-5UPVEGR9Y9')
 
 					st.sidebar.latex(f"{output} \quad ={answer}")
 					curr_tool = 'solved'
@@ -247,8 +247,13 @@ def main():
 		cs_body()
 		
 	with col3:  
-		pics, captions = st.columns([1,1.8])
 
+		top = st.container()
+		top.subheader("Select tools with 1 finger")
+
+		bot = st.container()
+		pics, captions = bot.columns([1,1.8])
+	
 		with pics:
 			info_pics()
 		with captions:
@@ -263,25 +268,25 @@ def cs_sidebar():
 		return None
 
 def info_pics():
-	""" Images for the instructions """
-	st.image('instructions_pic/draw.png')
-	st.image('instructions_pic/erase.png')
-	st.image('instructions_pic/clear.png')
-	st.image('instructions_pic/solution.png')
-	st.image('instructions_pic/bookmark.png')
+    """ Images for the instructions """
+    st.image('Instructions_pic/draw.png')
+    st.image('instructions_pic/erase.png')
+    st.image('instructions_pic/clear.png')
+    st.image('instructions_pic/solution.png')
+    st.image('instructions_pic/bookmark.png')
 
 
 def info_captions():
-	""" Written instructions"""
-	st.subheader('Draw Tool')
-	st.subheader("")
-	st.subheader('Erase Tool')
-	st.subheader("")
-	st.subheader('Clear Canvas')
-	st.subheader("")
-	st.subheader('Solve The Equation')
-	st.subheader("")
-	st.subheader('Bookmark')
+    """ Written instructions"""
+    st.subheader('Draw Tool (2 fingers)')
+    st.subheader("")
+    st.subheader('Erase Tool (2 fingers)')
+    st.subheader("")
+    st.subheader('Clear Canvas')
+    st.subheader("")
+    st.subheader('Solve The Equation')
+    st.subheader("")
+    st.subheader('Bookmark')
 
 
 def cs_body():
