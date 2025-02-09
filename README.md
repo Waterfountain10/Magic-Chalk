@@ -4,7 +4,7 @@ Magic Chalk is an interactive whiteboard application developed using Python. It 
 
 ## Demo Video 
 
-<iframe width="884" height="625" src="https://www.youtube.com/embed/Cy3BYuwWMK0" title="Magic Chalk DEMO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![Magic Chalk Demo](https://github.com/user-attachments/assets/09dbd685-dcb8-4fb1-a600-9af4f0e17e8d)](https://youtu.be/Cy3BYuwWMK0?si=MwmqteWtZ_ErATvz)
 
 ## Installation & Dependencies
 Before running the application, ensure that you have the following libraries installed:
